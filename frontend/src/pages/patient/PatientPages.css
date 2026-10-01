@@ -1,0 +1,83 @@
+/* PatientPages.css - shared by the patient screens */
+
+/* ---------- next appointment panel ---------- */
+.next-appointment {
+  border-left: 3px solid var(--accent);
+}
+
+.next-appointment__label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--teal-600);
+  margin-bottom: 8px;
+}
+
+.next-appointment__body {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.next-appointment__when {
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.next-appointment__who {
+  margin-top: 2px;
+  font-weight: 600;
+}
+
+.next-appointment__reason {
+  margin: 8px 0 0;
+  max-width: 60ch;
+}
+
+.patient-stats {
+  margin: 16px 0;
+}
+
+/* ---------- two-column dashboard ---------- */
+.dashboard-columns {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1fr 1fr;
+  margin-bottom: 16px;
+}
+
+@media (max-width: 760px) {
+  .dashboard-columns {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- compact lists inside cards ---------- */
+.mini-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+}
+
+.mini-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.mini-list li:first-child {
+  padding-top: 0;
+}
+
+.mini-list li:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}

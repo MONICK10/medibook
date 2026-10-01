@@ -1,83 +1,135 @@
-// App.jsx
+// src/App.jsx
 // -----------------------------------------------------------------
-// The main page. It loads doctors and bookings from the backend,
-// then shows the 3 sections:
-//   1. Doctors
-//   2. Book Appointment (form + list of bookings)
-//   3. Upload Report
+// Every route in the app, in one place.
+//
+// The shape is:
+//   /                       public landing page
+//   /login /register ...    public, and only when logged OUT
+//   /patient/*              patients only
+//   /doctor/*               doctors only
+//   /admin/*                admins only
+//   /access-denied          logged in, but not allowed
+//   *                       404
+//
+// Each role area is one <Route> wrapped in <RequireRole>, so a new
+// page added inside an area is protected automatically - there is no
+// per-page guard to forget.
+//
+// Those guards are for navigation only. The API checks every request
+// for itself; see components/RouteGuards.jsx.
 // -----------------------------------------------------------------
 
-import { useEffect, useState } from 'react';
-import { API_URL } from './config.js';
-import DoctorList from './components/DoctorList.jsx';
-import BookingForm from './components/BookingForm.jsx';
-import BookingList from './components/BookingList.jsx';
-import UploadReport from './components/UploadReport.jsx';
-import Message from './components/Message.jsx';
+import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
 
-function App() {
-  // "State" = data that can change. When it changes, React redraws the page.
-  const [doctors, setDoctors] = useState([]);
-  const [appointments, setAppointments] = useState([]);
-  const [loadError, setLoadError] = useState('');
+import Layout from './components/Layout.jsx';
+import { RequireRole, RequireAnonymous } from './components/RouteGuards.jsx';
 
-  // Get the list of doctors from the backend.
-  async function loadDoctors() {
-    try {
-      const response = await fetch(API_URL + '/api/doctors');
-      const data = await response.json();
-      setDoctors(data);
-    } catch (err) {
-      setLoadError('Could not reach the server. Is the backend running?');
-    }
-  }
+import LandingPage from './pages/LandingPage.jsx';
+import LoginPage from './pages/auth/LoginPage.jsx';
+import RegisterPage from './pages/auth/RegisterPage.jsx';
+import ForgotPasswordPage from './pages/auth/ForgotPasswordPage.jsx';
+import ResetPasswordPage from './pages/auth/ResetPasswordPage.jsx';
+import NotFoundPage from './pages/NotFoundPage.jsx';
+import AccessDeniedPage from './pages/AccessDeniedPage.jsx';
 
-  // Get the list of bookings from the backend.
-  async function loadAppointments() {
-    try {
-      const response = await fetch(API_URL + '/api/appointments');
-      const data = await response.json();
-      setAppointments(data);
-    } catch (err) {
-      setLoadError('Could not reach the server. Is the backend running?');
-    }
-  }
+import ProfilePage from './pages/shared/ProfilePage.jsx';
+import PatientDashboard from './pages/patient/PatientDashboard.jsx';
+import DoctorDashboard from './pages/doctor/DoctorDashboard.jsx';
+import AdminDashboard from './pages/admin/AdminDashboard.jsx';
 
-  // useEffect with [] runs ONCE, when the page first opens.
-  useEffect(() => {
-    loadDoctors();
-    loadAppointments();
-  }, []);
-
+export default function App() {
   return (
-    <div className="container">
-      <header>
-        <h1>MediBook</h1>
-        <p className="subtitle">Book a doctor appointment (demo app, fake data only)</p>
-      </header>
+    <Routes>
+      {/* Layout draws the header and footer; its <Outlet /> is where
+          each page below is rendered. */}
+      <Route element={<Layout />}>
+        {/* ---------- public ---------- */}
+        <Route path="/" element={<LandingPage />} />
 
-      <Message type="error" text={loadError} />
+        {/* RequireAnonymous: a signed-in user who opens /login is sent
+            to their dashboard rather than shown a form they do not need. */}
+        <Route
+          path="/login"
+          element={
+            <RequireAnonymous>
+              <LoginPage />
+            </RequireAnonymous>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <RequireAnonymous>
+              <RegisterPage />
+            </RequireAnonymous>
+          }
+        />
+        <Route
+          path="/forgot-password"
+          element={
+            <RequireAnonymous>
+              <ForgotPasswordPage />
+            </RequireAnonymous>
+          }
+        />
+        {/* Reset is NOT behind RequireAnonymous: someone may follow the
+            emailed link while still logged in on another tab, and that
+            should still work. */}
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
 
-      <section className="card">
-        <h2>1. Doctors</h2>
-        <DoctorList doctors={doctors} />
-      </section>
+        <Route path="/access-denied" element={<AccessDeniedPage />} />
 
-      <section className="card">
-        <h2>2. Book Appointment</h2>
-        {/* After a booking is saved, reload the list so it appears. */}
-        <BookingForm doctors={doctors} onBooked={loadAppointments} />
-        <h3>All Bookings</h3>
-        <BookingList appointments={appointments} doctors={doctors} />
-      </section>
+        {/* ---------- patient ---------- */}
+        <Route
+          path="/patient"
+          element={
+            <RequireRole roles={['patient']}>
+              <RoleArea />
+            </RequireRole>
+          }
+        >
+          <Route index element={<PatientDashboard />} />
+          <Route path="profile" element={<ProfilePage />} />
+        </Route>
 
-      <section className="card">
-        <h2>3. Upload Report</h2>
-        {/* After a report is uploaded, reload the list to show the file name. */}
-        <UploadReport appointments={appointments} onUploaded={loadAppointments} />
-      </section>
-    </div>
+        {/* ---------- doctor ---------- */}
+        <Route
+          path="/doctor"
+          element={
+            <RequireRole roles={['doctor']}>
+              <RoleArea />
+            </RequireRole>
+          }
+        >
+          <Route index element={<DoctorDashboard />} />
+          <Route path="profile" element={<ProfilePage />} />
+        </Route>
+
+        {/* ---------- admin ---------- */}
+        <Route
+          path="/admin"
+          element={
+            <RequireRole roles={['admin']}>
+              <RoleArea />
+            </RequireRole>
+          }
+        >
+          <Route index element={<AdminDashboard />} />
+          <Route path="profile" element={<ProfilePage />} />
+        </Route>
+
+        {/* A link from the first version of this app. */}
+        <Route path="/dashboard" element={<Navigate to="/" replace />} />
+
+        {/* ---------- 404 ---------- */}
+        <Route path="*" element={<NotFoundPage />} />
+      </Route>
+    </Routes>
   );
 }
 
-export default App;
+// A nested <Outlet />, so one role guard wraps a whole area instead of
+// each page inside it. Used by all three areas.
+function RoleArea() {
+  return <Outlet />;
+}

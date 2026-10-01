@@ -1,0 +1,44 @@
+/* StatusPages.css - the 404 and Access Denied pages */
+
+.status-page {
+  max-width: 600px;
+  padding-top: 56px;
+}
+
+.status-card {
+  text-align: left;
+}
+
+.status-card__code {
+  margin: 0 0 8px;
+  font-size: 2.75rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--teal-300);
+  font-variant-numeric: tabular-nums;
+}
+
+.status-card__code--warn {
+  color: #e3b566;
+}
+
+.status-card h1 {
+  margin-bottom: 10px;
+}
+
+.status-card code {
+  background: var(--slate-100);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-size: 0.875rem;
+  /* A long path must wrap rather than widen the card. */
+  overflow-wrap: anywhere;
+}
+
+.status-card__note {
+  margin: 16px 0 20px;
+}
+
+.status-card .row {
+  margin-top: 20px;
+}

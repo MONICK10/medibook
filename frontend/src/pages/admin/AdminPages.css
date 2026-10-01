@@ -1,0 +1,89 @@
+/* AdminPages.css - shared by the admin screens */
+
+.admin-breakdown {
+  margin: 16px 0;
+}
+
+.admin-breakdown__number {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- quick links ---------- */
+.admin-links {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.admin-link {
+  display: grid;
+  gap: 3px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--slate-50);
+  text-decoration: none;
+  color: inherit;
+}
+
+.admin-link:hover {
+  border-color: var(--teal-300);
+  background: var(--teal-50);
+  color: inherit;
+}
+
+.admin-link__title {
+  font-weight: 650;
+  color: var(--accent);
+}
+
+.admin-link__text {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
+
+/* ---------- shared admin table bits ---------- */
+.admin-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+/* A dialog used for the add/edit forms. */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: rgba(29, 36, 44, 0.45);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 24px 16px;
+  overflow-y: auto;
+}
+
+.modal {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  width: 100%;
+  max-width: 560px;
+  padding: 22px;
+  margin: auto;
+}
+
+.modal__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.modal__head h2 {
+  margin: 0;
+}

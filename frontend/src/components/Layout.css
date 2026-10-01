@@ -1,0 +1,229 @@
+/* Layout.css - the header, navigation and footer */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.site-header__inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 16px;
+  min-height: var(--header-height);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* ---------- brand ---------- */
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 1.125rem;
+  /* Stops the logo shrinking when the nav gets crowded. */
+  flex: 0 0 auto;
+}
+
+.brand:hover {
+  color: var(--accent-strong);
+}
+
+.brand__mark {
+  width: 26px;
+  height: 26px;
+}
+
+/* ---------- navigation ---------- */
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: auto;
+  flex-wrap: wrap;
+}
+
+.site-nav__link {
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  color: var(--slate-700);
+  text-decoration: none;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.site-nav__link:hover {
+  background: var(--slate-100);
+  color: var(--slate-900);
+}
+
+.site-nav__link--active {
+  background: var(--teal-50);
+  color: var(--teal-700);
+}
+
+.site-nav__account {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: 12px;
+  padding-left: 14px;
+  border-left: 1px solid var(--border);
+}
+
+.account {
+  display: grid;
+  line-height: 1.2;
+  text-decoration: none;
+  color: var(--slate-900);
+  padding: 4px 6px;
+  border-radius: var(--radius-sm);
+}
+
+.account:hover {
+  background: var(--slate-100);
+  color: var(--slate-900);
+}
+
+.account__name {
+  font-size: 0.875rem;
+  font-weight: 650;
+  /* Long names must not push the Log out button off screen. */
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.account__role {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* ---------- mobile menu button ---------- */
+/* Hidden on wide screens; the media query below turns it on. */
+.nav-toggle {
+  display: none;
+  margin-left: auto;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid var(--slate-300);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+/* The three lines, drawn with one element plus its two pseudo
+   elements, so there is no extra markup. */
+.nav-toggle__bars,
+.nav-toggle__bars::before,
+.nav-toggle__bars::after {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: var(--slate-700);
+  border-radius: 2px;
+  content: '';
+}
+
+.nav-toggle__bars::before {
+  transform: translateY(-6px);
+}
+
+.nav-toggle__bars::after {
+  transform: translateY(4px);
+}
+
+/* ---------- phones and small tablets ---------- */
+@media (max-width: 860px) {
+  .site-header__inner {
+    flex-wrap: wrap;
+    padding: 8px 16px;
+  }
+
+  .nav-toggle {
+    display: flex;
+  }
+
+  /* Collapsed by default. Using display:none rather than a height
+     animation keeps the links out of the tab order while hidden -
+     a keyboard user should not be able to focus an invisible link. */
+  .site-nav {
+    display: none;
+    width: 100%;
+    margin: 0;
+    padding: 8px 0 12px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 2px;
+  }
+
+  .site-nav--open {
+    display: flex;
+  }
+
+  .site-nav__link {
+    padding: 11px 12px;
+  }
+
+  .site-nav__account {
+    margin: 8px 0 0;
+    padding: 12px 0 0;
+    border-left: 0;
+    border-top: 1px solid var(--border);
+    justify-content: space-between;
+  }
+
+  .account__name {
+    max-width: none;
+  }
+}
+
+/* ---------- footer ---------- */
+.site-footer {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  margin-top: auto;
+}
+
+.site-footer__inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 28px 16px;
+  display: grid;
+  gap: 14px;
+  grid-template-columns: 1fr auto;
+  align-items: start;
+}
+
+.site-footer__inner p {
+  margin: 2px 0 0;
+}
+
+.site-footer__links {
+  display: flex;
+  gap: 16px;
+  font-size: 0.9375rem;
+}
+
+.site-footer__note {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+@media (max-width: 560px) {
+  .site-footer__inner {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,100 @@
+/* DoctorPages.css - shared by the doctor screens */
+
+.today-card {
+  margin: 16px 0;
+}
+
+/* ---------- today's appointment list ---------- */
+.today-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.today-list__item {
+  display: grid;
+  /* time | patient (flexible) | status */
+  grid-template-columns: 90px 1fr auto;
+  gap: 14px;
+  align-items: start;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.today-list__item:first-child {
+  padding-top: 0;
+}
+
+.today-list__item:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.today-list__time {
+  font-weight: 700;
+  /* Tabular numbers so the times line up in a column. */
+  font-variant-numeric: tabular-nums;
+}
+
+.today-list__duration {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.today-list__reason {
+  margin: 2px 0 0;
+  max-width: 60ch;
+}
+
+.today-list__status {
+  justify-self: end;
+}
+
+@media (max-width: 560px) {
+  .today-list__item {
+    grid-template-columns: 1fr auto;
+  }
+
+  /* On a phone the time moves above the name rather than squeezing
+     into its own narrow column. */
+  .today-list__time {
+    grid-column: 1 / -1;
+  }
+
+  .today-list__duration {
+    display: inline;
+    margin-left: 8px;
+  }
+}
+
+/* ---------- status counts ---------- */
+/* A labelled count per status. Deliberately not a bar chart: four
+   numbers are easier to read as numbers, and the written label means
+   the colour of the pill is never the only thing carrying meaning. */
+.status-counts {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+
+.status-counts li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--slate-50);
+}
+
+.status-counts__value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}

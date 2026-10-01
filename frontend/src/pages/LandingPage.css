@@ -1,0 +1,351 @@
+/* LandingPage.css */
+
+.landing {
+  padding-bottom: 40px;
+}
+
+/* ---------- hero ---------- */
+.hero {
+  /* A very soft tint rather than a saturated block: this is the first
+     thing a worried person sees, so it should feel calm. */
+  background: linear-gradient(180deg, var(--teal-50) 0%, var(--page-bg) 100%);
+  border-bottom: 1px solid var(--teal-100);
+}
+
+.hero__inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 48px 16px 56px;
+  display: grid;
+  gap: 36px;
+  grid-template-columns: 1.1fr 0.9fr;
+  align-items: center;
+}
+
+.hero__eyebrow {
+  margin: 0 0 8px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--teal-600);
+}
+
+.hero__text h1 {
+  margin-bottom: 14px;
+  /* Stops a long headline stretching to an uncomfortable line length;
+     ~60 characters is the comfortable maximum for reading. */
+  max-width: 19ch;
+}
+
+.hero__lead {
+  font-size: 1.0625rem;
+  color: var(--slate-700);
+  max-width: 48ch;
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 24px 0 20px;
+}
+
+.hero__demo {
+  max-width: 52ch;
+}
+
+/* ---------- decorative booking card ---------- */
+.hero__panel {
+  display: flex;
+  justify-content: center;
+}
+
+.hero__card {
+  width: 100%;
+  max-width: 320px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px;
+  box-shadow: var(--shadow-md);
+}
+
+.hero__card-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.hero__avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--teal-100);
+  flex: 0 0 auto;
+}
+
+.hero__card-name {
+  font-weight: 650;
+}
+
+.hero__card-meta {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
+
+.hero__slots {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 14px 0;
+}
+
+.hero__slot {
+  text-align: center;
+  padding: 8px 0;
+  border: 1px solid var(--teal-300);
+  border-radius: var(--radius-sm);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--teal-700);
+  background: var(--teal-50);
+}
+
+.hero__slot--taken {
+  border-color: var(--border);
+  background: var(--slate-100);
+  color: var(--slate-300);
+  text-decoration: line-through;
+}
+
+.hero__cta {
+  margin-top: 4px;
+  padding: 11px;
+  text-align: center;
+  border-radius: var(--radius-sm);
+  background: var(--accent);
+  color: #fff;
+  font-weight: 650;
+  font-size: 0.9375rem;
+}
+
+/* ---------- sections ---------- */
+.landing__section {
+  padding-top: 44px;
+  padding-bottom: 8px;
+}
+
+.landing__section-head {
+  margin-bottom: 20px;
+}
+
+.landing__section-head h2 {
+  margin-bottom: 4px;
+}
+
+.landing__section-head p {
+  margin: 0;
+}
+
+/* ---------- how it works ---------- */
+.steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  counter-reset: step;
+}
+
+.step {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+}
+
+.step h3 {
+  margin: 12px 0 6px;
+}
+
+.step p {
+  margin: 0;
+}
+
+.step__number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--teal-50);
+  color: var(--teal-700);
+  font-weight: 700;
+}
+
+/* ---------- specialties ---------- */
+.specialties {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+}
+
+.specialty {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--teal-300);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+}
+
+.specialty h3 {
+  margin-bottom: 4px;
+  font-size: 1rem;
+}
+
+.specialty p {
+  margin-bottom: 10px;
+}
+
+.specialty__count {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--teal-600);
+}
+
+/* ---------- doctor cards ---------- */
+.doctor-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.doctor-card__head {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.doctor-card__head h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.doctor-card__head p {
+  margin: 0;
+}
+
+.doctor-card__initials {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--teal-50);
+  color: var(--teal-700);
+  font-weight: 700;
+  font-size: 0.9375rem;
+}
+
+.doctor-card__bio {
+  margin: 0;
+  color: var(--slate-700);
+  /* Clamp to four lines so cards in a row stay the same height
+     regardless of how much a doctor wrote. */
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.doctor-card__facts {
+  display: flex;
+  gap: 24px;
+  margin: 0;
+  padding: 12px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.doctor-card__facts dt {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  font-weight: 650;
+}
+
+.doctor-card__facts dd {
+  margin: 2px 0 0;
+  font-weight: 650;
+}
+
+/* Pushes the button to the bottom so every card's button lines up. */
+.doctor-card .btn {
+  margin-top: auto;
+  align-self: flex-start;
+}
+
+/* ---------- closing call to action ---------- */
+.landing__cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--teal-600);
+  border-color: var(--teal-600);
+}
+
+.landing__cta h2,
+.landing__cta p {
+  color: #fff;
+  margin: 0;
+}
+
+.landing__cta p {
+  opacity: 0.9;
+  margin-top: 4px;
+  max-width: 52ch;
+}
+
+.landing__cta .btn {
+  background: #fff;
+  color: var(--teal-700);
+}
+
+.landing__cta .btn:hover {
+  background: var(--teal-50);
+  color: var(--teal-700);
+}
+
+/* ---------- phones ---------- */
+@media (max-width: 800px) {
+  .hero__inner {
+    grid-template-columns: 1fr;
+    padding: 32px 16px 40px;
+    gap: 28px;
+  }
+
+  .hero__text h1 {
+    max-width: none;
+  }
+
+  /* The decorative card is the first thing to go on a small screen:
+     it is illustration, not information. */
+  .hero__panel {
+    display: none;
+  }
+}
