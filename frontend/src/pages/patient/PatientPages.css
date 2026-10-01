@@ -81,3 +81,368 @@
   padding-bottom: 0;
   border-bottom: 0;
 }
+
+/* ---------- breadcrumb ---------- */
+.breadcrumb {
+  margin-bottom: 14px;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.breadcrumb [aria-current='page'] {
+  color: var(--slate-700);
+  font-weight: 600;
+}
+
+/* ---------- browse doctors ---------- */
+.browse-filters {
+  margin-bottom: 16px;
+}
+
+.browse-count {
+  margin: 0 0 12px;
+}
+
+.doctor-card__name {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.doctor-card__qual {
+  margin: -4px 0 0;
+}
+
+/* ---------- doctor profile ---------- */
+.doctor-profile {
+  margin-bottom: 16px;
+}
+
+.doctor-profile__head {
+  display: grid;
+  /* avatar | name (flexible) | facts */
+  grid-template-columns: auto 1fr auto;
+  gap: 18px;
+  align-items: start;
+}
+
+.doctor-profile__initials {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  background: var(--teal-50);
+  color: var(--teal-700);
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+.doctor-profile__identity h1 {
+  margin: 0 0 2px;
+  font-size: 1.5rem;
+}
+
+.doctor-profile__specialty {
+  margin: 0;
+  font-weight: 650;
+  color: var(--accent);
+}
+
+.doctor-profile__facts {
+  display: flex;
+  gap: 26px;
+  margin: 0;
+  text-align: right;
+}
+
+.doctor-profile__facts dt {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  font-weight: 650;
+}
+
+.doctor-profile__facts dd {
+  margin: 2px 0 0;
+  font-weight: 650;
+}
+
+.doctor-profile__fee {
+  font-size: 1.15rem;
+  color: var(--accent);
+}
+
+.doctor-profile__about {
+  font-size: 1rem;
+  margin-bottom: 6px;
+}
+
+.doctor-profile__bio {
+  margin: 0;
+  max-width: 72ch;
+  color: var(--slate-700);
+}
+
+@media (max-width: 680px) {
+  .doctor-profile__head {
+    grid-template-columns: auto 1fr;
+  }
+
+  /* The facts drop onto their own row and left-align under the name. */
+  .doctor-profile__facts {
+    grid-column: 1 / -1;
+    text-align: left;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+  }
+}
+
+/* ---------- booking summary ---------- */
+.booking-summary {
+  margin-bottom: 16px;
+  border-left: 3px solid var(--accent);
+}
+
+.booking-summary__title {
+  margin: 0 0 14px;
+  font-size: 1rem;
+}
+
+.booking-summary__list {
+  margin: 0 0 14px;
+  display: grid;
+  gap: 10px;
+}
+
+.booking-summary__list > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.booking-summary__list > div:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.booking-summary__list dt {
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+.booking-summary__list dd {
+  margin: 0;
+  font-weight: 650;
+  text-align: right;
+}
+
+/* ---------- tabs ---------- */
+.tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.tab {
+  padding: 10px 16px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  font: inherit;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.tab:hover {
+  color: var(--slate-900);
+}
+
+.tab--active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+/* ---------- appointment cards ---------- */
+.appointment-card__main {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 18px;
+}
+
+.appointment-card__when {
+  padding-right: 18px;
+  border-right: 1px solid var(--border);
+}
+
+.appointment-card__date {
+  font-weight: 700;
+}
+
+.appointment-card__time {
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.appointment-card__doctor {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.appointment-card__reason {
+  margin: 8px 0 6px;
+  max-width: 70ch;
+}
+
+.appointment-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.appointment-card__actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.appointment-card__locked {
+  margin: 14px 0 0;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+/* The cancel-confirm and reschedule panels. */
+.appointment-card__panel {
+  margin-top: 14px;
+  padding: 16px;
+  background: var(--slate-50);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  display: grid;
+  gap: 12px;
+}
+
+.appointment-card__panel h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.appointment-card__panel p {
+  margin: 0;
+}
+
+@media (max-width: 560px) {
+  .appointment-card__main {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .appointment-card__when {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 0 0 12px;
+    border-right: 0;
+    border-bottom: 1px solid var(--border);
+  }
+}
+
+/* ---------- report list ---------- */
+.report-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.report-list__item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.report-list__item:first-child {
+  padding-top: 0;
+}
+
+.report-list__item:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.report-list__icon {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-sm);
+  background: var(--teal-50);
+  color: var(--teal-700);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.report-list__info {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Long file names must not push the Download button off screen. */
+.report-list__info > div {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---------- prescriptions ---------- */
+.prescription__head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding-bottom: 12px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.prescription__doctor {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.prescription__notes {
+  margin-top: 16px;
+  padding: 14px 16px;
+  background: var(--teal-50);
+  border-radius: var(--radius-sm);
+}
+
+.prescription__notes h3 {
+  margin: 0 0 4px;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--teal-700);
+}
+
+.prescription__notes p {
+  margin: 0;
+  /* Keeps the line breaks the doctor typed. */
+  white-space: pre-wrap;
+}

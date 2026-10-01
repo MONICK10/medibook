@@ -33,7 +33,15 @@ import NotFoundPage from './pages/NotFoundPage.jsx';
 import AccessDeniedPage from './pages/AccessDeniedPage.jsx';
 
 import ProfilePage from './pages/shared/ProfilePage.jsx';
+
 import PatientDashboard from './pages/patient/PatientDashboard.jsx';
+import BrowseDoctorsPage from './pages/patient/BrowseDoctorsPage.jsx';
+import DoctorDetailPage from './pages/patient/DoctorDetailPage.jsx';
+import BookAppointmentPage from './pages/patient/BookAppointmentPage.jsx';
+import MyAppointmentsPage from './pages/patient/MyAppointmentsPage.jsx';
+import MyReportsPage from './pages/patient/MyReportsPage.jsx';
+import MyPrescriptionsPage from './pages/patient/MyPrescriptionsPage.jsx';
+
 import DoctorDashboard from './pages/doctor/DoctorDashboard.jsx';
 import AdminDashboard from './pages/admin/AdminDashboard.jsx';
 
@@ -89,6 +97,12 @@ export default function App() {
           }
         >
           <Route index element={<PatientDashboard />} />
+          <Route path="doctors" element={<BrowseDoctorsPage />} />
+          <Route path="doctors/:doctorId" element={<DoctorDetailPage />} />
+          <Route path="doctors/:doctorId/book" element={<BookAppointmentPage />} />
+          <Route path="appointments" element={<MyAppointmentsPage />} />
+          <Route path="reports" element={<MyReportsPage />} />
+          <Route path="prescriptions" element={<MyPrescriptionsPage />} />
           <Route path="profile" element={<ProfilePage />} />
         </Route>
 

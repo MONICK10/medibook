@@ -20,7 +20,10 @@ import {
   ApiError,
 } from '../api/client.js';
 
-const AuthContext = createContext(null);
+// Exported so a test can supply its own value and render a logged-in
+// page without a real login. Application code should use useAuth()
+// rather than touching this directly.
+export const AuthContext = createContext(null);
 
 // 'loading' until we know; then 'authenticated' or 'anonymous'.
 //

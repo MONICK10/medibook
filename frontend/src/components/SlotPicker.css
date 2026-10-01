@@ -1,0 +1,129 @@
+/* SlotPicker.css */
+
+.slot-picker {
+  display: grid;
+  gap: 18px;
+}
+
+/* ---------- the day strip ---------- */
+.slot-picker__days {
+  display: flex;
+  gap: 8px;
+  /* Scrolls sideways on a phone rather than wrapping into a ragged
+     block, so the week reads as one row. */
+  overflow-x: auto;
+  padding-bottom: 4px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.slot-picker__day {
+  flex: 0 0 auto;
+  min-width: 74px;
+  display: grid;
+  gap: 1px;
+  padding: 10px 8px;
+  border: 1px solid var(--slate-300);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  cursor: pointer;
+  font: inherit;
+  text-align: center;
+}
+
+.slot-picker__day:hover:not(:disabled) {
+  border-color: var(--teal-300);
+  background: var(--teal-50);
+}
+
+.slot-picker__day--active {
+  border-color: var(--accent);
+  background: var(--teal-50);
+  /* A second inner ring, so the selected day is obvious without
+     relying on the fill colour alone. */
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+.slot-picker__day--full {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: var(--slate-50);
+}
+
+.slot-picker__day-name {
+  font-size: 0.75rem;
+  font-weight: 650;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
+.slot-picker__day-date {
+  font-size: 1.1rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.slot-picker__day-count {
+  font-size: 0.6875rem;
+  color: var(--teal-600);
+  font-weight: 650;
+}
+
+.slot-picker__day--full .slot-picker__day-count {
+  color: var(--text-muted);
+}
+
+/* ---------- the slot grid ---------- */
+.slot-picker__heading {
+  margin: 0 0 10px;
+  font-size: 1rem;
+}
+
+.slot-picker__grid {
+  display: grid;
+  /* auto-fill with a minimum width: as many per row as fit, which is
+     two on a narrow phone and six on a desktop. */
+  grid-template-columns: repeat(auto-fill, minmax(84px, 1fr));
+  gap: 8px;
+}
+
+.slot {
+  min-height: 44px;
+  padding: 10px 6px;
+  border: 1px solid var(--teal-300);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--teal-700);
+  font: inherit;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+
+.slot:hover:not(:disabled) {
+  background: var(--teal-50);
+}
+
+.slot--selected {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.slot--selected:hover {
+  background: var(--accent-strong);
+}
+
+.slot--unavailable {
+  border-color: var(--border);
+  background: var(--slate-100);
+  color: var(--slate-300);
+  cursor: not-allowed;
+  /* A line through it as well as the grey, so the state does not rest
+     on colour alone. */
+  text-decoration: line-through;
+}
+
+.slot-picker__legend {
+  margin: 12px 0 0;
+}
