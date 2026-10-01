@@ -1,0 +1,142 @@
+/* App.css - plain CSS for the whole app */
+
+/* ---------- Page basics ---------- */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f2f6f9;
+  color: #222;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+header h1 {
+  margin: 0;
+  color: #0b6e79;
+}
+
+.subtitle {
+  margin-top: 4px;
+  color: #666;
+}
+
+/* ---------- Section cards ---------- */
+.card {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.card h2 {
+  margin-top: 0;
+  color: #0b6e79;
+}
+
+/* ---------- Doctors ---------- */
+.doctor-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.doctor-list li {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.doctor-list li span {
+  color: #666;
+}
+
+/* ---------- Forms ---------- */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-weight: bold;
+  font-size: 14px;
+  flex: 1;
+}
+
+.form input,
+.form select {
+  padding: 8px;
+  font-size: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-weight: normal;
+}
+
+.row {
+  display: flex;
+  gap: 12px;
+}
+
+button {
+  padding: 10px;
+  font-size: 15px;
+  background: #0b6e79;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #095761;
+}
+
+/* ---------- Success / error messages ---------- */
+.message {
+  padding: 10px;
+  border-radius: 4px;
+  margin: 0;
+}
+
+.message.success {
+  background: #e3f6e8;
+  color: #1d6b32;
+}
+
+.message.error {
+  background: #fdecea;
+  color: #a12622;
+}
+
+/* ---------- Bookings table ---------- */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  display: block;      /* lets the table scroll sideways on small screens */
+  overflow-x: auto;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 8px;
+  border-bottom: 1px solid #eee;
+}
+
+th {
+  background: #f2f6f9;
+}

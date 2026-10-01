@@ -1,0 +1,11 @@
+# Installed packages (re-create with "npm install")
+node_modules/
+
+# Uploaded files (may contain medical reports - never commit them)
+uploads/
+
+# Secret settings
+.env
+
+# Frontend build output
+dist/
