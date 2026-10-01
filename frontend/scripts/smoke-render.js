@@ -125,6 +125,19 @@ const PRIVATE_ROUTES = [
   { path: '/patient/prescriptions', role: 'patient', name: 'my prescriptions' },
   { path: '/patient/profile', role: 'patient', name: 'patient profile' },
 
+  // doctor
+  { path: '/doctor', role: 'doctor', name: 'doctor dashboard' },
+  { path: '/doctor/appointments', role: 'doctor', name: 'doctor appointments' },
+  { path: '/doctor/patients', role: 'doctor', name: 'doctor patient list' },
+  { path: '/doctor/patients/abc', role: 'doctor', name: 'doctor patient record' },
+  {
+    path: '/doctor/appointments/abc/prescription',
+    role: 'doctor',
+    name: 'prescription form',
+  },
+  { path: '/doctor/availability', role: 'doctor', name: 'availability editor' },
+  { path: '/doctor/profile', role: 'doctor', name: 'doctor profile' },
+
   // Wrong role: the protected page must not render.
   {
     path: '/admin',

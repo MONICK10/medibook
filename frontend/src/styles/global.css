@@ -642,6 +642,251 @@ tbody tr:hover {
   justify-content: flex-end;
 }
 
+/* =================================================================
+   Shared widgets
+   Used by more than one page (patient and doctor screens both),
+   so they live here rather than in either page's own file.
+   ================================================================= */
+
+/* ---------- breadcrumb ---------- */
+.breadcrumb {
+  margin-bottom: 14px;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.breadcrumb [aria-current='page'] {
+  color: var(--slate-700);
+  font-weight: 600;
+}
+
+/* ---------- browse doctors ---------- */
+.browse-filters {
+  margin-bottom: 16px;
+}
+
+.browse-count {
+  margin: 0 0 12px;
+}
+
+.doctor-card__name {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.doctor-card__qual {
+  margin: -4px 0 0;
+}
+
+/* ---------- tabs ---------- */
+.tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.tab {
+  padding: 10px 16px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  font: inherit;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.tab:hover {
+  color: var(--slate-900);
+}
+
+.tab--active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+/* ---------- appointment cards ---------- */
+.appointment-card__main {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 18px;
+}
+
+.appointment-card__when {
+  padding-right: 18px;
+  border-right: 1px solid var(--border);
+}
+
+.appointment-card__date {
+  font-weight: 700;
+}
+
+.appointment-card__time {
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.appointment-card__doctor {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.appointment-card__reason {
+  margin: 8px 0 6px;
+  max-width: 70ch;
+}
+
+.appointment-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.appointment-card__actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.appointment-card__locked {
+  margin: 14px 0 0;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+/* The cancel-confirm and reschedule panels. */
+.appointment-card__panel {
+  margin-top: 14px;
+  padding: 16px;
+  background: var(--slate-50);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  display: grid;
+  gap: 12px;
+}
+
+.appointment-card__panel h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.appointment-card__panel p {
+  margin: 0;
+}
+
+@media (max-width: 560px) {
+  .appointment-card__main {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .appointment-card__when {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 0 0 12px;
+    border-right: 0;
+    border-bottom: 1px solid var(--border);
+  }
+}
+
+/* ---------- report list ---------- */
+.report-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.report-list__item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.report-list__item:first-child {
+  padding-top: 0;
+}
+
+.report-list__item:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.report-list__icon {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-sm);
+  background: var(--teal-50);
+  color: var(--teal-700);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.report-list__info {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Long file names must not push the Download button off screen. */
+.report-list__info > div {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---------- compact lists inside cards ---------- */
+.mini-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+}
+
+.mini-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.mini-list li:first-child {
+  padding-top: 0;
+}
+
+.mini-list li:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+/* ---------- two-column dashboard ---------- */
+.dashboard-columns {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1fr 1fr;
+  margin-bottom: 16px;
+}
+
+@media (max-width: 760px) {
+  .dashboard-columns {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ---------- small pieces ---------- */
 .muted {
   color: var(--text-muted);
