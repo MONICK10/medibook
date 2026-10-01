@@ -1,11 +1,33 @@
 # Installed packages (re-create with "npm install")
 node_modules/
 
-# Uploaded files (may contain medical reports - never commit them)
+# Secrets and local configuration. NEVER commit these.
+# .env.example holds the variable NAMES with empty values instead.
+.env
+.env.local
+.env.*.local
+
+# Uploaded files. These are patient medical reports in a real system,
+# so they must never reach a repository.
 uploads/
 
-# Secret settings
-.env
+# The local JSON database, created by "npm run seed".
+# Ignored because it is generated, and because in a real deployment the
+# equivalent would be patient data.
+backend/data/
+*.db.json
+*.json.tmp
 
 # Frontend build output
 dist/
+.vite/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editor and OS clutter
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

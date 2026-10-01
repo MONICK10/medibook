@@ -1,138 +1,118 @@
 // server.js
 // -----------------------------------------------------------------
-// The main file of the backend. It starts an Express web server
-// and defines the API routes (URLs) that the frontend calls.
+// Starts the application: wake up the adapters, then listen.
 //
-// Notice: this file does NOT know how data or files are stored.
-//   - Data   -> handled by db.js
-//   - Files  -> handled by storage.js
+// WHY adapters are initialised before the port opens:
+// if the server starts accepting requests while the database is still
+// connecting, the first requests fail for no good reason. Worse, in
+// AWS the load balancer's health check could pass on an instance that
+// is not actually ready. Connect first, then open the door.
 // -----------------------------------------------------------------
 
-const express = require('express');
-const cors = require('cors');
-const multer = require('multer');
+const config = require('./config');
+const logger = require('./lib/logger');
+const { createApp } = require('./app');
 
-const db = require('./db');
-const storage = require('./storage');
+const secrets = require('./adapters/secrets');
+const db = require('./adapters/db');
+const storage = require('./adapters/storage');
+const auth = require('./adapters/auth');
+const mailer = require('./adapters/mailer');
 
-const app = express();
-
-// Read the port from an environment variable. If it is not set, use 3000.
-const PORT = process.env.PORT || 3000;
-
-// ---------- Middleware (code that runs before every route) ----------
-
-// Allow the frontend (running on a different port) to call this API.
-app.use(cors());
-
-// Let Express read JSON sent in the request body.
-app.use(express.json());
-
-// Multer handles file uploads.
-// memoryStorage() keeps the file in memory, then storage.js decides
-// where to save it. This keeps "where files go" inside storage.js only.
-const upload = multer({
-  storage: multer.memoryStorage(),
-  limits: { fileSize: 5 * 1024 * 1024 }, // max 5 MB
-  fileFilter: (req, file, callback) => {
-    // Only allow PDF and image files.
-    const allowedTypes = ['application/pdf', 'image/png', 'image/jpeg'];
-    if (allowedTypes.includes(file.mimetype)) {
-      callback(null, true); // accept the file
-    } else {
-      callback(new Error('Only PDF, PNG or JPG files are allowed'));
-    }
-  },
-});
-
-// ---------- Routes ----------
-
-// Health check: a quick way to see if the server is running.
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok' });
-});
-
-// Get the list of doctors.
-app.get('/api/doctors', async (req, res) => {
-  const doctors = await db.getDoctors();
-  res.json(doctors);
-});
-
-// Save a new booking.
-app.post('/api/appointments', async (req, res) => {
-  const { patientName, phone, doctorId, date, time } = req.body;
-
-  // 1. Check that all fields were sent.
-  if (!patientName || !phone || !doctorId || !date || !time) {
-    return res.status(400).json({ error: 'All fields are required' });
-  }
-
-  // 2. Check the phone number: only digits, 10 of them.
-  if (!/^[0-9]{10}$/.test(phone)) {
-    return res.status(400).json({ error: 'Phone must be 10 digits' });
-  }
-
-  // 3. Check that the doctor exists.
-  const doctor = await db.getDoctorById(Number(doctorId));
-  if (!doctor) {
-    return res.status(400).json({ error: 'Doctor not found' });
-  }
-
-  // 4. Everything is fine, so save it.
-  const appointment = await db.addAppointment({
-    patientName,
-    phone,
-    doctorId: doctor.id,
-    date,
-    time,
+async function start() {
+  logger.info('Starting MediBook backend', {
+    env: config.env,
+    nodeVersion: process.version,
+    modes: config.modes,
   });
 
-  // 201 means "Created".
-  res.status(201).json(appointment);
-});
-
-// Get all bookings.
-app.get('/api/appointments', async (req, res) => {
-  const appointments = await db.getAppointments();
-  res.json(appointments);
-});
-
-// Upload a medical report for a booking.
-// upload.single('report') means: expect ONE file in a form field named "report".
-app.post('/api/reports', upload.single('report'), async (req, res) => {
-  const appointmentId = Number(req.body.appointmentId);
-
-  // 1. Check that a file was sent.
-  if (!req.file) {
-    return res.status(400).json({ error: 'Please choose a file' });
+  // Warn about secrets we invented at boot. This is the loud version of
+  // "it works on my machine": handy locally, fatal in production (where
+  // config.js refuses to start without them).
+  if (config.ephemeralSecrets.length > 0) {
+    logger.warn('Using generated development secrets', {
+      secrets: config.ephemeralSecrets,
+      consequence:
+        'Logins and download links stop working when the server restarts. Run "npm run init-env" to fix.',
+    });
   }
 
-  // 2. Check that the booking exists.
-  const appointment = await db.getAppointmentById(appointmentId);
-  if (!appointment) {
-    return res.status(400).json({ error: 'Booking not found' });
+  // Secrets first: the database may need a password from it.
+  await secrets.init();
+  await db.init();
+  await storage.init();
+  await auth.init();
+
+  const app = createApp();
+
+  const server = app.listen(config.port, () => {
+    logger.info('Backend listening', {
+      port: config.port,
+      url: config.apiPublicUrl,
+      allowedOrigins: config.allowedOrigins,
+      storage: storage.describe(),
+      mailer: mailer.describe(),
+    });
+  });
+
+  // --- shutting down cleanly ---------------------------------------
+  // WHY this matters more in AWS than on a laptop: when an auto-scaling
+  // group or ECS replaces an instance it sends SIGTERM and then waits a
+  // short grace period. Exiting immediately would cut off requests that
+  // are mid-flight; ignoring the signal gets the process killed anyway.
+  // So: stop accepting new connections, let the open ones finish, flush
+  // the data file, exit.
+  let shuttingDown = false;
+
+  async function shutdown(signal) {
+    if (shuttingDown) return;
+    shuttingDown = true;
+
+    logger.info('Shutting down', { signal });
+
+    // A hard deadline, in case a connection never closes. Without it the
+    // process can hang forever and be SIGKILLed with data unflushed.
+    const forceExit = setTimeout(() => {
+      logger.error('Shutdown took too long, exiting now');
+      process.exit(1);
+    }, 10000);
+    forceExit.unref();
+
+    server.close(async () => {
+      try {
+        await db.close();
+        logger.info('Shutdown complete');
+        process.exit(0);
+      } catch (error) {
+        logger.error('Error during shutdown', { error: error.message });
+        process.exit(1);
+      }
+    });
   }
 
-  // 3. Save the file (storage.js decides where) and link it to the booking.
-  try {
-    const savedName = await storage.saveFile(req.file);
-    await db.setAppointmentReport(appointmentId, savedName);
-    res.status(201).json({ message: 'Report uploaded', fileName: savedName });
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).json({ error: 'Could not save the file' });
-  }
+  process.on('SIGTERM', () => shutdown('SIGTERM'));
+  process.on('SIGINT', () => shutdown('SIGINT')); // Ctrl+C
+
+  return server;
+}
+
+// A crash that reaches here means our error handling missed something.
+// Log it in the same structured format (so it is searchable in
+// CloudWatch) and exit, rather than carrying on in an unknown state.
+process.on('unhandledRejection', (reason) => {
+  logger.error('Unhandled promise rejection', {
+    reason: reason instanceof Error ? reason.message : String(reason),
+    stack: reason instanceof Error ? reason.stack : undefined,
+  });
+  process.exit(1);
 });
 
-// ---------- Error handler ----------
-// If anything above throws an error (for example a wrong file type,
-// or a file that is too big), Express sends it here.
-app.use((err, req, res, next) => {
-  console.error(err.message);
-  res.status(400).json({ error: err.message });
+process.on('uncaughtException', (error) => {
+  logger.error('Uncaught exception', { message: error.message, stack: error.stack });
+  process.exit(1);
 });
 
-// ---------- Start the server ----------
-app.listen(PORT, () => {
-  console.log('MediBook backend running on http://localhost:' + PORT);
+start().catch((error) => {
+  logger.error('Failed to start', { message: error.message, stack: error.stack });
+  process.exit(1);
 });
