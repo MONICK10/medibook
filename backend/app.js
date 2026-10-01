@@ -22,7 +22,16 @@ const { globalLimiter } = require('./middleware/rateLimit');
 
 const healthRoutes = require('./routes/health.routes');
 const authRoutes = require('./routes/auth.routes');
+const specialtyRoutes = require('./routes/specialties.routes');
+const doctorsRoutes = require('./routes/doctors.routes');
+const appointmentRoutes = require('./routes/appointments.routes');
+const reportRoutes = require('./routes/reports.routes');
+const prescriptionRoutes = require('./routes/prescriptions.routes');
+const profileRoutes = require('./routes/profile.routes');
+const patientRoutes = require('./routes/patient.routes');
+const doctorWorkspaceRoutes = require('./routes/doctor.routes');
 const adminRoutes = require('./routes/admin.routes');
+const fileRoutes = require('./routes/files.routes');
 
 function createApp() {
   const app = express();
@@ -103,10 +112,31 @@ function createApp() {
   app.use(healthRoutes);
 
   app.use('/api/auth', authRoutes);
-  app.use('/api/admin', adminRoutes);
 
-  // Phase 2 adds: /api/doctors, /api/specialties, /api/appointments,
-  // /api/reports, /api/prescriptions, /api/files, /api/profile.
+  // Public reads: the landing page and the Browse Doctors screen work
+  // before anyone logs in. Each of these routers decides for itself
+  // whether a login is needed - there is no requireAuth here.
+  app.use('/api/specialties', specialtyRoutes);
+  app.use('/api/doctors', doctorsRoutes);
+
+  // Signed file downloads. No requireAuth by design: the signed token
+  // in the URL is the authorisation, and it was issued by
+  // /api/reports/:id/download-url after a permission check. See
+  // routes/files.routes.js.
+  app.use('/api/files', fileRoutes);
+
+  // Logged-in areas. Each router calls requireAuth itself rather than
+  // relying on being mounted here, so moving a mount point can never
+  // silently expose one.
+  app.use('/api/profile', profileRoutes);
+  app.use('/api/appointments', appointmentRoutes);
+  app.use('/api/reports', reportRoutes);
+  app.use('/api/prescriptions', prescriptionRoutes);
+
+  // Role workspaces.
+  app.use('/api/patient', patientRoutes);
+  app.use('/api/doctor', doctorWorkspaceRoutes);
+  app.use('/api/admin', adminRoutes);
 
   // --- 8. fallbacks -------------------------------------------------
   // Anything unmatched is a 404...

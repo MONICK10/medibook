@@ -385,6 +385,18 @@ const doctors = {
     const { rows } = await doctors.list({ isActive: undefined });
     return rows.find((row) => row.id === id) || null;
   },
+
+  // For the admin dashboard. Counts via the USER row, because active or
+  // inactive is a property of the account, not of the doctor profile -
+  // one source of truth, so a deactivated login can never still show up
+  // as an available doctor.
+  async countActive() {
+    const state = store.getState();
+    return state.doctors.filter((doctor) => {
+      const user = state.users.find((item) => item.id === doctor.userId);
+      return Boolean(user && user.isActive);
+    }).length;
+  },
 };
 
 // =================================================================

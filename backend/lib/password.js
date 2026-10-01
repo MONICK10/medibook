@@ -79,6 +79,45 @@ function checkPasswordStrength(password, context = {}) {
   return { ok: true };
 }
 
+// Build a random password that is guaranteed to pass the rules above.
+//
+// WHY the app generates this instead of letting an admin type one:
+// when an admin creates a doctor account, any password the admin
+// chooses is a password the admin knows. Generating it and emailing it
+// to the doctor means only the doctor ever sees it. (With
+// MAIL_MODE=console it prints to the backend terminal, which is how you
+// read it while teaching.)
+function generateTemporaryPassword() {
+  const crypto = require('crypto');
+
+  // No look-alike characters (0/O, 1/l/I), because somebody has to read
+  // this out of an email and type it correctly.
+  const lower = 'abcdefghijkmnopqrstuvwxyz';
+  const upper = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+  const digits = '23456789';
+  const all = lower + upper + digits;
+
+  const pickFrom = (set) => set[crypto.randomInt(set.length)];
+
+  // One of each required kind first, so the result cannot fail the rules
+  // by chance, then fill up to length 14.
+  const characters = [pickFrom(lower), pickFrom(upper), pickFrom(digits)];
+  while (characters.length < 14) characters.push(pickFrom(all));
+
+  // Shuffle, so the guaranteed characters are not always in positions
+  // 1-3. Fisher-Yates with a cryptographic random source.
+  for (let i = characters.length - 1; i > 0; i -= 1) {
+    const j = crypto.randomInt(i + 1);
+    [characters[i], characters[j]] = [characters[j], characters[i]];
+  }
+
+  const password = characters.join('');
+
+  // Belt and braces: if this ever fails the rules, try again rather
+  // than create an account whose password the app would reject.
+  return checkPasswordStrength(password).ok ? password : generateTemporaryPassword();
+}
+
 // The same rules as text, so the frontend and the docs can show them
 // without the list drifting out of sync with the check above.
 const PASSWORD_RULES_TEXT = [
@@ -89,4 +128,10 @@ const PASSWORD_RULES_TEXT = [
   'Not a common password, your name, or your email',
 ];
 
-module.exports = { checkPasswordStrength, PASSWORD_RULES_TEXT, MIN_LENGTH, MAX_LENGTH };
+module.exports = {
+  checkPasswordStrength,
+  generateTemporaryPassword,
+  PASSWORD_RULES_TEXT,
+  MIN_LENGTH,
+  MAX_LENGTH,
+};
