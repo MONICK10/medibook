@@ -138,6 +138,15 @@ const PRIVATE_ROUTES = [
   { path: '/doctor/availability', role: 'doctor', name: 'availability editor' },
   { path: '/doctor/profile', role: 'doctor', name: 'doctor profile' },
 
+  // admin
+  { path: '/admin', role: 'admin', name: 'admin dashboard' },
+  { path: '/admin/doctors', role: 'admin', name: 'manage doctors' },
+  { path: '/admin/specialties', role: 'admin', name: 'manage specialties' },
+  { path: '/admin/appointments', role: 'admin', name: 'all appointments' },
+  { path: '/admin/users', role: 'admin', name: 'manage users' },
+  { path: '/admin/audit-log', role: 'admin', name: 'audit log' },
+  { path: '/admin/profile', role: 'admin', name: 'admin profile' },
+
   // Wrong role: the protected page must not render.
   {
     path: '/admin',
@@ -162,6 +171,24 @@ const PRIVATE_ROUTES = [
     role: 'doctor',
     name: 'doctor blocked from a patient\'s reports page',
     mustNotContain: ['Upload a report'],
+  },
+  {
+    path: '/admin/audit-log',
+    role: 'doctor',
+    name: 'doctor blocked from the audit log',
+    mustNotContain: ['Loading the audit log'],
+  },
+  {
+    path: '/admin/users',
+    role: 'patient',
+    name: 'patient blocked from manage users',
+    mustNotContain: ['Loading users'],
+  },
+  {
+    path: '/doctor/patients',
+    role: 'patient',
+    name: 'patient blocked from the doctor patient list',
+    mustNotContain: ['Loading your patients'],
   },
 ];
 

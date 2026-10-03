@@ -1,54 +1,25 @@
 # MediBook
 
-A healthcare appointment web app, built to be run locally with no cloud
-account, and then moved onto AWS one service at a time.
+A healthcare appointment web app, built to run entirely on your laptop
+and then be moved onto AWS one service at a time.
 
 Three roles: **patient**, **doctor**, **admin**. Patients book
 appointments and upload medical reports, doctors manage their schedule
-and write prescriptions, admins run the clinic.
+and write prescriptions, admins run the clinic and read the audit log.
 
 All data is invented. There is no real patient information anywhere in
 this repository.
 
-> **Build status: phase 1 of 7 complete (backend foundation).**
-> The API has health, authentication and the audit log. The rest of the
-> API arrives in phase 2 and the React frontend in phases 3 to 6.
-> See [Build phases](#build-phases) below, and do not start the
-> frontend yet - it is still the old starter version and does not match
-> the new API.
-
 ---
 
-## What makes this project unusual
+## Run it
 
-Every part of the app that would become an AWS service in production is
-isolated in its own **adapter** file, chosen by one environment
-variable. The same code runs entirely on your laptop or against AWS,
-and nothing outside the adapter knows which.
+You need **Node.js 20.9 or newer** (`node --version`). Nothing else: no
+database to install, no Docker, no AWS account.
 
-| Adapter                  | Local (default)         | AWS                        | Switch         |
-| ------------------------ | ----------------------- | -------------------------- | -------------- |
-| `adapters/db.js`         | JSON file in `data/`    | PostgreSQL on RDS          | `DB_MODE`      |
-| `adapters/storage.js`    | files in `uploads/`     | private S3 bucket          | `STORAGE_MODE` |
-| `adapters/auth.js`       | bcryptjs + our own JWT  | Amazon Cognito             | `AUTH_MODE`    |
-| `adapters/mailer.js`     | prints to the terminal  | Amazon SES                 | `MAIL_MODE`    |
-| `adapters/secrets.js`    | `.env` file             | AWS Secrets Manager        | `SECRETS_MODE` |
+Two terminals.
 
-Each adapter file starts with a comment block explaining the interface
-and **why** it is worth splitting out. The AWS implementations are
-written in phase 7.
-
----
-
-## Requirements
-
-- **Node.js 20.9 or newer.** Check with `node --version`.
-  Download from <https://nodejs.org> if you need it.
-- Nothing else. No database to install, no Docker, no AWS account.
-
----
-
-## Run it locally
+**Terminal 1 - the API:**
 
 ```bash
 cd medibook/backend
@@ -57,223 +28,182 @@ npm run seed
 npm run dev
 ```
 
-That is all three steps. `npm run seed` creates `backend/.env` with
-freshly generated secrets, fills the local database with demo data, and
-prints the demo logins. `npm run dev` starts the API on
-<http://localhost:3000> and restarts it when you edit a file.
-
-Check it is alive:
+**Terminal 2 - the website:**
 
 ```bash
-curl http://localhost:3000/api/health
+cd medibook/frontend
+npm install
+npm run dev
 ```
 
-```json
-{ "status": "ok", "modes": { "db": "local", "storage": "local", ... } }
-```
+Then open <http://localhost:5173>.
 
-To stop it, press **Ctrl + C**.
+`npm run seed` creates `backend/.env` with fresh random secrets, fills
+the local database with demo data, and prints the logins. Run it again
+at any time to wipe and start over.
 
-### Frontend
-
-Not yet. The `frontend/` folder still holds the original starter app,
-which calls API routes that no longer exist. It is replaced in phase 3.
+Stop either server with **Ctrl + C**.
 
 ---
 
 ## Demo logins
 
-Created by `npm run seed`. Every account uses the same password:
+Every account uses the same password:
 
 ```
 ClinicDemo#2026
 ```
 
-| Role    | Email                           | Notes             |
-| ------- | ------------------------------- | ----------------- |
-| Admin   | `admin@medibook.local`          | the only admin    |
-| Doctor  | `asha.rao@medibook.local`       | General Medicine  |
-| Doctor  | `vikram.menon@medibook.local`   | Cardiology        |
-| Doctor  | `priya.nair@medibook.local`     | Dermatology       |
-| Doctor  | `imran.qureshi@medibook.local`  | Paediatrics       |
-| Doctor  | `meera.krishnan@medibook.local` | Orthopaedics      |
-| Doctor  | `sanjay.pillai@medibook.local`  | General Medicine  |
-| Patient | `ravi@example.com`              | has reports       |
-| Patient | `divya@example.com`             | has a prescription|
-| Patient | `arjun@example.com`             |                   |
-| Patient | `fatima@example.com`            |                   |
-| Patient | `joseph@example.com`            |                   |
+| Role    | Email                           |
+| ------- | ------------------------------- |
+| Admin   | `admin@medibook.local`          |
+| Doctor  | `asha.rao@medibook.local`       |
+| Doctor  | `vikram.menon@medibook.local`   |
+| Doctor  | `priya.nair@medibook.local`     |
+| Doctor  | `imran.qureshi@medibook.local`  |
+| Doctor  | `meera.krishnan@medibook.local` |
+| Doctor  | `sanjay.pillai@medibook.local`  |
+| Patient | `ravi@example.com`              |
+| Patient | `divya@example.com`             |
+| Patient | `arjun@example.com`             |
+| Patient | `fatima@example.com`            |
+| Patient | `joseph@example.com`            |
 
-The seed also creates 5 specialties, 23 appointments across all four
-statuses, 5 prescriptions and 5 sample report files.
+The login page has a **Demo accounts** panel that fills these in for
+you. The seed also creates 5 specialties, 6 doctors with weekly
+schedules, 23 appointments across all four statuses, 5 prescriptions
+and 5 sample report files.
 
 These are demo accounts with a published password, which is why
 `npm run seed` refuses to run when `NODE_ENV=production`.
-
-Re-running `npm run seed` wipes the database and starts over.
 
 ---
 
 ## Commands
 
-Run these from `medibook/backend`.
+**backend/**
 
-| Command            | What it does                                        |
-| ------------------ | --------------------------------------------------- |
-| `npm run dev`      | Start the API, restarting on file changes           |
-| `npm start`        | Start the API once (what a server would run)        |
-| `npm run seed`     | Wipe and refill the database with demo data         |
-| `npm run check`    | Run the self-tests (47 checks, no server needed)    |
-| `npm run init-env` | Create `backend/.env` with new random secrets       |
-| `npm run migrate`  | Create the PostgreSQL schema (phase 7)              |
+| Command            | What it does                                      |
+| ------------------ | ------------------------------------------------- |
+| `npm run dev`      | Start the API, restarting on file changes         |
+| `npm start`        | Start the API once                                |
+| `npm run seed`     | Wipe and refill the database with demo data       |
+| `npm run check`    | 47 unit checks (rules, slots, passwords, paths)   |
+| `npm run check:api`| 68 end-to-end checks against the real HTTP API    |
+| `npm test`         | Both of the above                                 |
+| `npm run init-env` | Create `backend/.env` with new random secrets     |
+| `npm run migrate`  | Not implemented - for you to write (see TODOs)    |
 
----
+**frontend/**
 
-## What works right now
-
-| Method | Route                        | Who         |
-| ------ | ---------------------------- | ----------- |
-| GET    | `/health`, `/api/health`     | anyone      |
-| POST   | `/api/auth/register`         | anyone      |
-| POST   | `/api/auth/login`            | anyone      |
-| POST   | `/api/auth/logout`           | logged in   |
-| GET    | `/api/auth/me`               | logged in   |
-| GET    | `/api/auth/password-rules`   | anyone      |
-| POST   | `/api/auth/forgot-password`  | anyone      |
-| POST   | `/api/auth/reset-password`   | anyone      |
-| POST   | `/api/auth/change-password`  | logged in   |
-| GET    | `/api/admin/audit-logs`      | admin only  |
-
-### Try the password reset
-
-There is no email server locally. `MAIL_MODE=console` prints the email,
-including the reset link, straight into the backend terminal:
-
-```bash
-curl -X POST http://localhost:3000/api/auth/forgot-password \
-  -H "Content-Type: application/json" \
-  -d '{"email":"ravi@example.com"}'
-```
-
-Look at the terminal running the backend. Copy the link's `token`, then:
-
-```bash
-curl -X POST http://localhost:3000/api/auth/reset-password \
-  -H "Content-Type: application/json" \
-  -d '{"token":"PASTE_IT_HERE","password":"MyNewPass#2026"}'
-```
+| Command         | What it does                                         |
+| --------------- | ---------------------------------------------------- |
+| `npm run dev`   | Start the website on port 5173                       |
+| `npm run build` | Build the static site into `dist/`                   |
+| `npm run smoke` | Render all 39 routes in Node and check they work     |
 
 ---
 
-## Folder structure
+## What is where
 
 ```
 medibook/
   backend/
-    server.js            Starts up: adapters first, then listen
-    app.js               Builds the Express app (middleware order matters)
-    config.js            Every environment variable, read once
-
-    adapters/            THE SWAPPABLE PARTS
-      db.js                switch + the interface contract
-      db.local.js          JSON file store
-      storage.js / storage.local.js
-      auth.js   / auth.local.js
-      mailer.js / mailer.console.js
-      secrets.js/ secrets.env.js
-
-    auth/
-      roles.js           Roles and the permission table
-
-    middleware/
-      requireAuth.js     Layer 1: are you logged in?       (401)
-      requireRole.js     Layer 2: may your role do this?   (403)
-      rateLimit.js       Login and reset throttling
-      errors.js          The one place errors become responses
-      requestContext.js  Request id and structured logging
-
-    services/
-      slots.js           Weekly schedule -> bookable slots
-      audit.js           The audit trail
-
-    lib/
-      validate.js        Input validation, strips unknown fields
-      password.js        Password strength rules
-      time.js            Dates and times as plain strings
-      logger.js          JSON logs to stdout
-      httpError.js       Errors that carry a status code
-      jsonStore.js       The JSON file behind db.local.js
-
-    routes/
-      health.routes.js
-      auth.routes.js
-      admin.routes.js
-
-    scripts/
-      seed.js            Demo data
-      check.js           Self-tests
-      init-env.js        Generate .env
-      sampleFiles.js     Builds valid PDFs and PNGs for the seed
-
-    data/                The local database (git-ignored)
-    uploads/             Uploaded files (git-ignored)
-    .env                 Your secrets (git-ignored)
-    .env.example         Every variable, explained
-
-  frontend/              React + Vite (rebuilt in phase 3)
-  README.md
+    server.js, app.js, config.js    startup, middleware order, all env vars
+    adapters/     THE SWAPPABLE PARTS - see the next section
+    auth/roles.js roles and the permission table
+    middleware/   requireAuth (401), requireRole (403), rate limits, errors
+    services/     access.js (row-level permission), slots.js, audit.js
+    lib/          validation, password rules, time, logging, JSON store
+    routes/       one file per area of the API
+    scripts/      seed, checks, init-env
+    data/         the local database (git-ignored)
+    uploads/      uploaded files (git-ignored)
+  frontend/
+    src/config.js           the API address, read from VITE_API_URL
+    src/api/client.js       one fetch wrapper for the whole app
+    src/auth/AuthContext.jsx who is logged in
+    src/components/         layout, route guards, shared UI, slot picker
+    src/pages/              landing, auth, patient/, doctor/, admin/
+    src/styles/global.css   design tokens and shared styles
+  AWS-TODO.md    every stub you need to fill in for AWS
 ```
 
 ---
 
-## How security is enforced
+## The adapters
+
+Everything that would become an AWS service is isolated in one file,
+chosen by one environment variable. The rest of the app never knows
+which is active.
+
+| Adapter                  | Local (default)         | AWS (stubbed for you) | Switch         |
+| ------------------------ | ----------------------- | --------------------- | -------------- |
+| `adapters/db.js`         | JSON file in `data/`    | PostgreSQL on RDS     | `DB_MODE`      |
+| `adapters/storage.js`    | files in `uploads/`     | private S3 bucket     | `STORAGE_MODE` |
+| `adapters/auth.js`       | bcryptjs + our own JWT  | Amazon Cognito        | `AUTH_MODE`    |
+| `adapters/mailer.js`     | prints to the terminal  | Amazon SES            | `MAIL_MODE`    |
+| `adapters/secrets.js`    | `.env` file             | Secrets Manager       | `SECRETS_MODE` |
+
+**The AWS side is deliberately not written.** Each `*.postgres.js`,
+`*.s3.js`, `*.cognito.js`, `*.ses.js` and `*.aws.js` file exists with
+every function stubbed, a TODO saying what to write, which AWS service
+it is, and which npm package you will need.
+
+See **[AWS-TODO.md](AWS-TODO.md)** for the full checklist.
+
+Switching back is always one line: set the mode to its local value in
+`backend/.env`.
+
+---
+
+## How security works
 
 Every rule is enforced in the **backend**. Hiding a button in React
 stops nobody who can use `curl`.
 
-Three layers, in this order:
+**Three layers, in order:**
 
-1. **`requireAuth`** - is there a valid token for an active account?
-   No token means **401**, so the frontend sends you to log in.
-2. **`requirePermission`** - does your role hold this permission?
-   Failing means **403**, so the frontend shows Access Denied.
-   Permissions live in one table in `auth/roles.js`, which is why
-   adding a receptionist role later is one entry and no route changes.
-3. **Ownership checks** - may you touch *this particular row*? A
-   patient sees only their own records; a doctor sees only patients
-   they have appointments with. (Phase 2, in `services/access.js`.)
+1. `requireAuth` - is there a valid token for an active account?
+   Failing gives **401**, and the frontend sends you to log in.
+2. `requirePermission` - does your role hold this permission? Failing
+   gives **403**, and the frontend shows Access Denied. Permissions
+   live in one table in `auth/roles.js`, so adding a receptionist role
+   later is one entry and no route changes.
+3. `services/access.js` - may you touch *this row*? A patient sees only
+   their own records; a doctor only patients they have appointments
+   with; an admin cannot read medical records at all.
 
-Also in place:
+**Also in place:** every input validated on the backend with unknown
+fields stripped (so nobody registers themselves as an admin); login and
+password-reset rate limits keyed by IP *and* email; `helmet` headers;
+CORS locked to `FRONTEND_URL`; no stack traces in responses; uploaded
+files never in a public folder, reachable only through signed links
+that expire in 5 minutes; bcryptjs password hashing where a login
+attempt for an unknown email takes the same time as a real one; and an
+append-only audit log of logins, failed logins, role changes,
+deletions and every report download.
 
-- Every input validated on the backend, with unknown fields **stripped**
-  so nobody can register themselves as an admin by adding a field.
-- Login and forgot-password rate limited, keyed by IP **and** email.
-- `helmet` security headers, and CORS locked to `FRONTEND_URL`.
-- No stack traces in API responses - errors return a code, a safe
-  message and a request id. The detail goes to the logs.
-- Uploaded files are never in a public folder. Downloads use
-  short-lived signed links (5 minutes), exactly like S3 pre-signed URLs,
-  and permission is checked when the link is issued.
-- Passwords hashed with bcryptjs. A login attempt for an email that
-  does not exist takes the **same** time as a real one, so the login
-  form cannot be used to discover who has an account.
-- Sensitive actions written to an append-only audit log: logins, failed
-  logins, role changes, deletions, report downloads.
-
-Run `npm run check` to see these rules tested.
+Run `npm test` in `backend/` to see these checked, including: patient A
+reading patient B's appointment gets 403, a doctor who has never seen a
+patient gets 403 on their reports, a patient calling any `/admin` route
+gets 403, two patients cannot book the same slot, and a report cannot
+be fetched without a valid signed link.
 
 ---
 
-## Build phases
+## Things worth knowing
 
-| Phase | Contents                                               | State |
-| ----- | ------------------------------------------------------ | ----- |
-| 1     | Adapters (local), auth, roles, data model, seed         | done  |
-| 2     | Patient, doctor and admin APIs with ownership checks    | next  |
-| 3     | Frontend: landing page, auth pages, role-based routing  |       |
-| 4     | Frontend: patient pages                                 |       |
-| 5     | Frontend: doctor pages                                  |       |
-| 6     | Frontend: admin pages                                   |       |
-| 7     | AWS adapters (RDS, S3, Cognito, SES, Secrets Manager), docs |   |
-
-Phase 7 also adds `docs/ARCHITECTURE.md` and `docs/ROLES.md`.
+- **Bookings are kept in a JSON file** at `backend/data/db.json`. It is
+  not a real database - it rewrites the whole file on every change.
+  That is the point of `DB_MODE=postgres`.
+- **Dates and times are plain strings** (`2026-10-05`, `14:30`), not
+  `Date` objects, so a server in another timezone cannot shift every
+  appointment by hours. Set `TZ` to the clinic's timezone in
+  production.
+- **Money is a whole number of paise** (`feeCents`), never a float.
+- **Passwords are never chosen by an admin.** Creating a doctor
+  generates one and emails it; with `MAIL_MODE=console` it prints in
+  the backend terminal. Password reset links print there too.
+- **The login page's demo panel** would be deleted before any real
+  deployment.

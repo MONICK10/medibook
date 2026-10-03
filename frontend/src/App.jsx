@@ -49,6 +49,11 @@ import DoctorPatientDetailPage from './pages/doctor/DoctorPatientDetailPage.jsx'
 import PrescriptionFormPage from './pages/doctor/PrescriptionFormPage.jsx';
 import AvailabilityPage from './pages/doctor/AvailabilityPage.jsx';
 import AdminDashboard from './pages/admin/AdminDashboard.jsx';
+import ManageDoctorsPage from './pages/admin/ManageDoctorsPage.jsx';
+import ManageSpecialtiesPage from './pages/admin/ManageSpecialtiesPage.jsx';
+import AllAppointmentsPage from './pages/admin/AllAppointmentsPage.jsx';
+import ManageUsersPage from './pages/admin/ManageUsersPage.jsx';
+import AuditLogPage from './pages/admin/AuditLogPage.jsx';
 
 export default function App() {
   return (
@@ -142,6 +147,11 @@ export default function App() {
           }
         >
           <Route index element={<AdminDashboard />} />
+          <Route path="doctors" element={<ManageDoctorsPage />} />
+          <Route path="specialties" element={<ManageSpecialtiesPage />} />
+          <Route path="appointments" element={<AllAppointmentsPage />} />
+          <Route path="users" element={<ManageUsersPage />} />
+          <Route path="audit-log" element={<AuditLogPage />} />
           <Route path="profile" element={<ProfilePage />} />
         </Route>
 
